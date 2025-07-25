@@ -1,14 +1,19 @@
 package com.personal.shadi.di
 
-import android.content.Context
-import coil.ImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
+import android.app.Application
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.room.Room
 import com.personal.shadi.common.Constants.BASE_URL
+import com.personal.shadi.common.Constants.DATABASE
+import com.personal.shadi.common.Constants.PAGE_SIZE
+import com.personal.shadi.data.local.UserEntity
+import com.personal.shadi.data.local.db.UserDatabase
+import com.personal.shadi.data.remote.UserRemoteMediator
 import com.personal.shadi.data.remote.api.UserApi
 import com.personal.shadi.domain.repository.UserRepository
-import com.personal.shadi.data.remote.repository.UserRepositoryImpl
+import com.personal.shadi.data.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +37,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: UserApi): UserRepository {
-        return UserRepositoryImpl(api)
+    fun provideDatabase(app: Application): UserDatabase {
+        return Room.databaseBuilder(
+            app,
+            UserDatabase::class.java,
+            DATABASE
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(api: UserApi, db: UserDatabase): UserRepository {
+        return UserRepositoryImpl(api, db)
     }
 }

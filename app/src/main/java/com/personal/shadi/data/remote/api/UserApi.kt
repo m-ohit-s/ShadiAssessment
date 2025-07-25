@@ -1,6 +1,6 @@
 package com.personal.shadi.data.remote.api
 
-import com.personal.shadi.data.remote.api.dto.ResultsDto
+import com.personal.shadi.data.remote.dto.ResultsDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
